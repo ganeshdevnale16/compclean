@@ -1,3 +1,9 @@
 [
-    
+  {
+    "id": 1,
+    "name": "TEST ALERT",
+    "time": "12:00",
+    "frequency": "daily",
+    "status": "active"
+  }
 ]
