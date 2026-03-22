@@ -362,16 +362,37 @@ def get_logs(alert_id: int):
 # -----------------------------
 # MANUAL RUN
 # -----------------------------
+# @router.post("/alerts/{alert_id}/run")
+# def run_alert_manually(alert_id: int):
+#     alerts = load_alerts()
+
+#     alert = next((a for a in alerts if a["id"] == alert_id), None)
+
+#     if not alert:
+#         return {"error": "Alert not found"}
+
+#     from scraper.alert import run_alert
+#     run_alert(alert)
+
+#     return {"message": "Alert executed manually"}
+
+
+
 @router.post("/alerts/{alert_id}/run")
 def run_alert_manually(alert_id: int):
-    alerts = load_alerts()
 
+    alerts = load_alerts()
     alert = next((a for a in alerts if a["id"] == alert_id), None)
 
     if not alert:
         return {"error": "Alert not found"}
 
-    from scraper.alert import run_alert
-    run_alert(alert)
+    try:
+        from scraper.alert import run_alert
+        result = run_alert(alert)
 
-    return {"message": "Alert executed manually"}
+        return {"message": "Alert executed", "result": result}
+
+    except Exception as e:
+        print("ERROR:", str(e))
+        return {"error": str(e)}
