@@ -30,6 +30,7 @@ from openai import OpenAI
 import os
 import sys
 import os
+
 # FIX UNICODE
 sys.stdout.reconfigure(encoding='utf-8')
 
@@ -41,12 +42,10 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 
-# OPENAI
-
-client = "na"
-
 
 def run_scraper():
+
+    client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     logs = []
 
