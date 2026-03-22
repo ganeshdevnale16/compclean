@@ -22,9 +22,8 @@ app.add_middleware(
 # -----------------------------
 # FILE PATH
 # -----------------------------
-
-# DATA_FILE = "../scraper/entity_match_results.xlsx"
-DATA_FILE = "../data/entity_match_results.xlsx"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "data", "entity_match_results.xlsx")
 
 
 # -----------------------------
@@ -99,8 +98,8 @@ def dashboard_data():
     import numpy as np
     import os
 
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    DATA_DIR = os.path.join(BASE_DIR, "data")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_FILE = os.path.join(BASE_DIR, "data", "entity_match_results.xlsx")
 
     file = os.path.join(DATA_DIR, "entity_match_results.xlsx")
 
@@ -244,8 +243,8 @@ class ReportRequest(BaseModel):
 @app.post("/download-report")
 def download_report(req: ReportRequest):
 
-    BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    DATA_DIR = os.path.join(BASE_DIR, "data")
+    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+    DATA_FILE = os.path.join(BASE_DIR, "data", "entity_match_results.xlsx")
 
     file = os.path.join(DATA_DIR, "entity_match_results.xlsx")
 
@@ -422,7 +421,7 @@ from scheduler import schedule_alerts
 
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DATA_DIR = os.path.join(BASE_DIR, "data")
+DATA_FILE = os.path.join(BASE_DIR, "data", "entity_match_results.xlsx")
 
 ALERT_FILE = os.path.join(DATA_DIR, "alerts.json")
 LOG_FILE = os.path.join(DATA_DIR, "alert_logs.json")
