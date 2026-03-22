@@ -835,8 +835,8 @@ app.add_middleware(
 # FILE PATH
 # -----------------------------
 
-
-DATA_FILE = "data/entity_match_results.xlsx"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+DATA_FILE = os.path.join(BASE_DIR, "data", "entity_match_results.xlsx")
 
 
 # -----------------------------
@@ -904,30 +904,27 @@ def run_pipeline():
     subprocess.run(["python", "scraper/alert.py"])
 
     return {"status": "pipeline completed"}
+
+
 @app.get("/dashboard")
 def dashboard_data():
 
-    import pandas as pd
-    import numpy as np
-    import os
+    if not os.path.exists(DATA_FILE):
+        return {
+            "kpi": {},
+            "case_status": {},
+            "state": {},
+            "court": {},
+            "timeline": {},
+            "cases": []
+        }
 
-    
-   
-    BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-    DATA_DIR = os.path.join(BASE_DIR, "data")
-
-    file = os.path.join(DATA_DIR, "entity_match_results.xlsx")
-
-    df = pd.read_excel(file)
+    df = pd.read_excel(DATA_FILE)
 
     df = df.replace([np.inf, -np.inf], "")
     df = df.fillna("")
 
     df = df[df["Is Present"].astype(str).str.lower() == "yes"]
-
-    # -----------------------
-    # DATE CLEAN
-    # -----------------------
 
     df["registration_date"] = pd.to_datetime(
         df["registration_date"],
@@ -937,10 +934,6 @@ def dashboard_data():
 
     df["month"] = df["registration_date"].dt.to_period("M").astype(str)
 
-    # -----------------------
-    # KPI
-    # -----------------------
-
     kpi = {
         "total_cases": int(len(df)),
         "entities": int(df["Entity Name"].nunique()),
@@ -948,77 +941,13 @@ def dashboard_data():
         "high_risk": int((df["litigation_risk_score"]>=7).sum())
     }
 
-    # -----------------------
-    # CASE STATUS
-    # -----------------------
-
-    case_status = (
-        df["case_status"]
-        .value_counts()
-        .astype(int)
-        .to_dict()
-    )
-
-    # -----------------------
-    # STATE
-    # -----------------------
-
-    state = (
-        df["state"]
-        .value_counts()
-        .head(10)
-        .astype(int)
-        .to_dict()
-    )
-
-    # -----------------------
-    # COURT
-    # -----------------------
-
-    court = (
-        df["court"]
-        .value_counts()
-        .head(10)
-        .astype(int)
-        .to_dict()
-    )
-
-    # -----------------------
-    # TIMELINE
-    # -----------------------
-
-    timeline = (
-        df.groupby("month")
-        .size()
-        .astype(int)
-        .to_dict()
-    )
-
-    # -----------------------
-    # CASE TABLE
-    # -----------------------
-
-    cases = df[[
-        "Entity Name",
-        "case_number",
-        "court",
-        "judge",
-        "state",
-        "case_status",
-        "litigation_risk_score",
-        "registration_date"
-    ]]
-
-    cases = cases.fillna("")
-    cases = cases.to_dict(orient="records")
-
     return {
         "kpi": kpi,
-        "case_status": case_status,
-        "state": state,
-        "court": court,
-        "timeline": timeline,
-        "cases": cases
+        "case_status": df["case_status"].value_counts().to_dict(),
+        "state": df["state"].value_counts().to_dict(),
+        "court": df["court"].value_counts().to_dict(),
+        "timeline": df.groupby("month").size().to_dict(),
+        "cases": df.to_dict(orient="records")
     }
 
 
