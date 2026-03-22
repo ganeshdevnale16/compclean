@@ -1,3 +1,65 @@
 [
-
+    {
+        "alert_id": 1,
+        "alert_name": "a",
+        "run_time": "2026-03-20 12:07:00",
+        "status": "failed",
+        "emails_sent": 0,
+        "cases_found": 0,
+        "error": "[Errno 2] No such file or directory: 'C:\\\\Users\\\\ADMIN\\\\Desktop\\\\Compliances\\\\backend\\\\data\\\\entity_match_results.xlsx'"
+    },
+    {
+        "alert_id": 2,
+        "alert_name": "New",
+        "run_time": "2026-03-20 12:10:00",
+        "status": "failed",
+        "emails_sent": 0,
+        "cases_found": 0,
+        "error": "[Errno 2] No such file or directory: 'C:\\\\Users\\\\ADMIN\\\\Desktop\\\\Compliances\\\\backend\\\\data\\\\Vendor_Client_data.xlsx'"
+    },
+    {
+        "alert_id": 2,
+        "alert_name": "New",
+        "run_time": "2026-03-20 12:11:09",
+        "status": "success",
+        "emails_sent": 1,
+        "cases_found": 5,
+        "error": null
+    },
+    {
+        "alert_id": 1,
+        "alert_name": "a",
+        "run_time": "2026-03-20 17:46:07",
+        "status": "success",
+        "emails_sent": 1,
+        "cases_found": 5,
+        "error": null
+    },
+    {
+        "alert_id": 1,
+        "alert_name": "a",
+        "run_time": "2026-03-22 12:03:26",
+        "status": "success",
+        "emails_sent": 1,
+        "cases_found": 5,
+        "error": null
+    },
+    {
+        "alert_id": 1,
+        "alert_name": "a",
+        "run_time": "2026-03-22 12:07:09",
+        "status": "success",
+        "emails_sent": 1,
+        "cases_found": 5,
+        "error": null
+    },
+    {
+        "alert_id": 2,
+        "alert_name": "New",
+        "run_time": "2026-03-22 12:11:08",
+        "status": "success",
+        "emails_sent": 1,
+        "cases_found": 5,
+        "error": null
+    }
 ]
