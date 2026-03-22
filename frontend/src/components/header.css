@@ -1,0 +1,52 @@
+/* ===== MAIN HEADER ===== */
+.main-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  background: #84bd00;
+  padding: 10px 20px;
+
+  color: white;
+}
+
+.main-header {
+  position: sticky;   /* 🔥 or fixed */
+  top: 0;
+  z-index: 1000;
+}
+/* LOGO */
+.logo {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+/* NAV */
+.nav-menu {
+  display: flex;
+  gap: 25px;
+}
+
+/* LINKS */
+.nav-menu a {
+  display: flex;
+  flex-direction: column;   /* icon above text */
+  align-items: center;
+
+  color: white;
+  text-decoration: none;
+  font-size: 12px;
+
+  transition: 0.2s;
+}
+
+/* ICON */
+.nav-menu a svg {
+  font-size: 16px;
+  margin-bottom: 3px;
+}
+
+/* HOVER */
+.nav-menu a:hover {
+  opacity: 0.8;
+}

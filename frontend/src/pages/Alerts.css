@@ -1,0 +1,429 @@
+/* ========================= */
+/* HEADER */
+/* ========================= */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+body {
+  overflow-x: hidden;   /* prevent horizontal scroll */
+}
+/* ===== SAME HEADER AS DASHBOARD ===== */
+
+.header {
+  width: 100%;
+  display: flex;
+  align-items: center;         /* 🔥 vertical center */
+  justify-content: space-between;
+
+  background: #84bd00;         /* your green */
+  padding: 10px 20px;          /* 🔥 reduce height */
+
+  height: 50px;                /* 🔥 fixed height for balance */
+  box-sizing: border-box;
+}
+
+/* Title */
+.header h1 {
+  color: #ffffff;
+  font-size: 20px;
+  margin: 0;
+  margin-bottom: 10px;
+   
+}
+
+/* Right side button */
+.header-right {
+  display: flex;
+  align-items: center;
+}
+
+
+/* Button improved */
+.create-btn {
+  background: #fafafa;
+  color: rgb(0, 0, 0);
+  border: none;
+  padding: 8px 14px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: 0.2s;
+}
+
+.create-btn:hover {
+  background: rgb(5, 5, 5);
+  color: rgb(255, 255, 255);
+}
+/* ========================= */
+/* ALERT LIST */
+/* ========================= */
+.alerts-list {
+  position: relative;   /* 🔥 important */
+  overflow: visible;    /* 🔥 allow dropdown to overflow */
+}
+.alert-row {
+  position: relative;   /* 🔥 important */
+
+}
+
+.alerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.alerts-list {
+  position: relative;
+  overflow: visible;   /* 🔥 MUST */
+}
+.alert-row:hover {
+  z-index: 2;
+}
+/* CARD STYLE */
+.alert-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #ffffff;
+  padding: 15px 18px;
+  border-radius: 12px;
+  cursor: pointer;
+  border: 2px solid #d1cdcd7c;
+  transition: all 0.2s ease;
+}
+
+.alert-row:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.08);
+}
+
+/* LEFT ICON */
+.left {
+  font-size: 40px;
+  width: 60px;
+}
+
+/* MIDDLE CONTENT */
+.middle {
+  flex: 1;
+}
+
+.alert-name {
+  font-weight: 1000;
+  font-size: 15px;
+  margin-bottom: 4px;
+}
+
+.alert-meta {
+  font-size: 15px;
+  color: #6b7280;
+}
+
+/* STATUS COLORS */
+.status-active {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status-paused {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* RIGHT SIDE (GEAR) */
+.right {
+  position: relative;
+}
+
+/* ========================= */
+/* DROPDOWN */
+/* ========================= */
+
+.dropdown {
+  position: absolute;
+  right: 0;        /* 🔥 stick to right */
+  top: 35px;
+
+  background: #fff;
+  border-radius: 10px;
+  min-width: 140px;
+
+  box-shadow: 0 8px 20px rgba(0,0,0,0.12);
+  padding: 6px 0;
+
+  z-index: 9999;
+}
+/* Smooth appear */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.dropdown button {
+  width: 100%;
+  padding: 10px 14px;
+
+  background: none;
+  border: none;
+  text-align: left;
+
+  font-size: 14px;
+  cursor: pointer;
+
+  transition: 0.2s;
+}
+
+/* Hover effect */
+.dropdown button:hover {
+  background: #f3f4f6;
+}
+/* Pause / Activate */
+.dropdown button:nth-child(1) {
+  color: #000000;
+}
+
+.dropdown button:nth-child(2) {
+  color: #000000;  /* blue for Run Now */
+}
+
+/* Edit */
+
+
+/* Delete */
+.dropdown button:nth-child(4) {
+  color: #ef4444;
+}
+.dropdown button:nth-child(3) {
+  color: #000000;
+}
+/* .dropdown {
+  position: absolute;
+  right: 0;
+  top: 32px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+  display: flex;
+  flex-direction: column;
+  min-width: 140px;
+  z-index: 10;
+}
+
+.dropdown button {
+  padding: 10px 14px;
+  border: none;
+  background: white;
+  cursor: pointer;
+  text-align: left;
+  font-size: 14px;
+  transition: 0.2s;
+}
+
+.dropdown button:hover {
+  background: #f3f4f6;
+} */
+
+
+/* ========================= */
+/* MODAL OVERLAY */
+/* ========================= */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.4);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(3px);
+  z-index: 100;
+}
+
+/* ========================= */
+/* MODAL BOX */
+/* ========================= */
+
+.modal {
+  background: #ffffff;
+  padding: 25px;
+  border-radius: 14px;
+  width: 420px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+  animation: fadeIn 0.2s ease-in-out;
+}
+
+.modal h3 {
+  margin-bottom: 15px;
+  text-align: center;
+}
+
+/* INPUTS */
+.modal input,
+.modal select {
+  width: 100%;
+  margin: 10px 0;
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ddd;
+  font-size: 14px;
+}
+
+/* BUTTONS */
+.modal-buttons {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 10px;
+}
+
+.modal-buttons button {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.modal-buttons button:first-child {
+  background: #16a34a;
+  color: white;
+}
+
+.modal-buttons button:first-child:hover {
+  background: #15803d;
+}
+
+.modal-buttons button:last-child {
+  background: #e5e7eb;
+}
+
+.modal-buttons button:last-child:hover {
+  background: #d1d5db;
+}
+
+
+/* ========================= */
+/* HISTORY MODAL */
+/* ========================= */
+
+.history-modal {
+  width: 520px;
+}
+
+/* TITLE */
+.history-title {
+  text-align: center;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 12px;
+}
+
+/* TABLE */
+.history-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 10px;
+}
+
+/* HEADER */
+.history-table th {
+  border-bottom: 2px solid #222;
+  padding: 12px;
+  font-size: 14px;
+  text-align: left;
+}
+
+/* ROWS */
+.history-table td {
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+  font-size: 14px;
+}
+
+/* HOVER */
+.history-table tr:hover {
+  background: #f9fafb;
+}
+
+/* EMPTY */
+.no-data {
+  text-align: center;
+  color: #9ca3af;
+  padding: 20px;
+}
+
+/* STATUS COLORS */
+.status-success {
+  color: #16a34a;
+  font-weight: 600;
+}
+
+.status-failed {
+  color: #dc2626;
+  font-weight: 600;
+}
+
+/* FOOTER */
+.history-footer {
+  display: flex;
+  justify-content: center;
+  margin-top: 15px;
+}
+
+.history-footer button {
+  padding: 6px 14px;
+  border: none;
+  border-radius: 6px;
+  background: #e5e7eb;
+  cursor: pointer;
+}
+
+.history-footer button:hover {
+  background: #d1d5db;
+}
+
+
+/* ========================= */
+/* ANIMATION */
+/* ========================= */
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* ===== MODAL HEADER ===== */
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+/* Close icon */
+.close-icon {
+  font-size: 22px;
+  font-weight: bold;
+  cursor: pointer;
+  color: #6b7280;
+  transition: 0.2s;
+}
+
+.close-icon:hover {
+  color: #ef4444;   /* red on hover */
+}

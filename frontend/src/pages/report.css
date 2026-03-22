@@ -1,0 +1,95 @@
+/* ===== PAGE ===== */
+/* .reports-page {
+  width: 100%;
+} */
+
+/* ===== CONTENT ===== */
+.content {
+  padding: 20px 30px;
+}
+
+/* ===== REPORT TYPE ===== */
+.report-type {
+  margin-bottom: 20px;
+}
+
+.report-type label {
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.report-type select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+/* ===== FILTER GRID ===== */
+.filters-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+/* Right side button */
+.header h1 {
+  display: flex;
+  align-items: center;
+}
+/* ===== DATE GRID ===== */
+.date-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+/* ===== LABELS ===== */
+.filters-grid label,
+.date-grid label {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  margin-bottom: 5px;
+}
+
+/* ===== INPUT ===== */
+.date-grid input {
+  width: 100%;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid #d1d5db;
+}
+
+/* ===== ACTION BUTTONS ===== */
+.report-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.report-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 500;
+}
+
+/* Primary */
+.report-actions button:first-child {
+  background: #3b82f6;
+  color: white;
+}
+
+.report-actions button:first-child:hover {
+  background: #2563eb;
+}
+
+/* Secondary */
+.report-actions button:last-child {
+  background: #e5e7eb;
+}
+
+.report-actions button:last-child:hover {
+  background: #d1d5db;
+}
