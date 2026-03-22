@@ -1158,22 +1158,16 @@ import sys
 import json
 from datetime import datetime
 import traceback
+from services.email_service import send_email
 # -----------------------------
 # PATH SETUP
 # -----------------------------
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-BACKEND_PATH = os.path.join(BASE_DIR, "backend")
 
-sys.path.append(BACKEND_PATH)
+sys.path.append(BASE_DIR)
 
-from services.email_service import send_email
-
-# -----------------------------
-# FILE PATHS
-# -----------------------------
-
-DATA_DIR = os.path.join(BASE_DIR, "backend", "data")
+DATA_DIR = os.path.join(BASE_DIR, "data")
 
 MATCH_FILE = os.path.join(DATA_DIR, "entity_match_results.xlsx")
 COMPANY_FILE = os.path.join(DATA_DIR, "Vendor_Client_data.xlsx")
@@ -1182,6 +1176,14 @@ REPORT_FOLDER = os.path.join(BASE_DIR, "reports")
 LOG_FILE = os.path.join(DATA_DIR, "alert_logs.json")
 
 os.makedirs(REPORT_FOLDER, exist_ok=True)
+
+# ensure log file exists
+if not os.path.exists(LOG_FILE):
+    with open(LOG_FILE, "w") as f:
+        json.dump([], f)
+
+
+
 
 
 # --------------------------------------------------
