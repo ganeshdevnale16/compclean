@@ -231,3 +231,6 @@ def send_email(to_email, subject, content, attachment_path=None):
         print("Email error:", str(e))
 
         return False  # ❌ FAILURE
+
+
+print("API KEY:", os.getenv("SENDGRID_API_KEY"))
