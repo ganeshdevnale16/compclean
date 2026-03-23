@@ -1292,5 +1292,16 @@ def start_scheduler():
 #     return logs[::-1]
 
 
+from email_service import send_email
+
+@app.get("/test-email")
+def test_email():
+    send_email(
+        to_email="deloittecompliancesystem@gmail.com",
+        subject="Test Email 🚀",
+        content="<h3>Compliance Monitor Working ✅</h3>"
+    )
+    return {"message": "Email sent"}
+
 
 
