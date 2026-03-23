@@ -1293,7 +1293,7 @@ def start_scheduler():
 #     return logs[::-1]
 
 
-from email_service import send_email
+from services.email_service import send_email
 
 @app.get("/test-email")
 def test_email():
