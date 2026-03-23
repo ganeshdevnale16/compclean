@@ -1574,18 +1574,18 @@ Regards
 Compliance Monitoring System
 """
 
-            try:
-                send_email(
+                success = send_email(
                     to_email=email,
                     subject=subject,
                     content=body,
                     attachment_path=report_file
                 )
-                emails_sent += 1
-                print("✅ Email sent:", email)
-
-            except Exception as e:
-                print("❌ Email failed:", email, str(e))
+                
+                if success:
+                    emails_sent += 1
+                    print("✅ Email sent:", email)
+                else:
+                    print("❌ Email failed:", email)
 
         # -----------------------------
         # CREATE FULL REPORT
@@ -1622,17 +1622,17 @@ Regards
 Compliance Monitoring System
 """
 
-            try:
-                send_email(
+                success = send_email(
                     to_email=email,
                     subject="Daily Litigation Intelligence Report",
                     content=body,
                     attachment_path=full_report
                 )
-                print("✅ Report sent:", email)
-
-            except Exception as e:
-                print("❌ Report failed:", email, str(e))
+                
+                if success:
+                    print("✅ Report sent:", email)
+                else:
+                    print("❌ Report failed:", email)
 
         print("All emails processed successfully")
 
