@@ -10,5 +10,5 @@ apscheduler
 requests
 python-dotenv
 openpyxl
-
+sendgrid
 
