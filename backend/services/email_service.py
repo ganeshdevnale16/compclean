@@ -192,12 +192,13 @@
 
 
 
+
 import base64
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
+from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
 import os
 
-SENDGRID_API_KEY = "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"   # 🔴 hardcoded key
+SENDGRID_API_KEY = "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"
 
 def send_email(to_email, subject, content, attachment_path=None):
     try:
@@ -214,12 +215,14 @@ def send_email(to_email, subject, content, attachment_path=None):
 
             encoded = base64.b64encode(data).decode()
 
-            message.add_attachment({
-                "content": encoded,
-                "type": "application/octet-stream",
-                "filename": os.path.basename(attachment_path),
-                "disposition": "attachment"
-            })
+            attachment = Attachment(
+                FileContent(encoded),
+                FileName(os.path.basename(attachment_path)),
+                FileType("application/octet-stream"),
+                Disposition("attachment")
+            )
+
+            message.attachment = attachment
 
         sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
