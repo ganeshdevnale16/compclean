@@ -127,46 +127,24 @@
 
 
 
-
-
-
-import smtplib
-from email.message import EmailMessage
+from sendgrid import SendGridAPIClient
+from sendgrid.helpers.mail import Mail
 import os
 
-EMAIL_USER = "deloittecompliancesystem@gmail.com"
-EMAIL_PASS = "xxlr edel dkyl vmsy"
-
-
-def send_email(to, subject, body, attachment=None):
-
-    msg = EmailMessage()
-    msg["Subject"] = subject
-    msg["From"] = EMAIL_USER
-    msg["To"] = to
-    msg.set_content(body)
-
-    if attachment and os.path.exists(attachment):
-        with open(attachment, "rb") as f:
-            msg.add_attachment(
-                f.read(),
-                maintype="application",
-                subtype="octet-stream",
-                filename=os.path.basename(attachment)
-            )
-
+def send_email(to_email, subject, content):
     try:
-        # ✅ SSL instead of TLS
-        with smtplib.SMTP_SSL("smtp.gmail.com", 465) as server:
-            server.login(EMAIL_USER, EMAIL_PASS)
-            server.send_message(msg)
+        message = Mail(
+            from_email='deloittecompliancesystem@gmail.com',
+            to_emails=to_email,
+            subject=subject,
+            html_content=content
+        )
 
-        print("Email sent")
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+        response = sg.send(message)
+
+        print("Email sent:", response.status_code)
 
     except Exception as e:
         print("Email error:", str(e))
-        server.starttls()
 
-        server.login(EMAIL_USER, EMAIL_PASS)
-
-        server.send_message(msg)
