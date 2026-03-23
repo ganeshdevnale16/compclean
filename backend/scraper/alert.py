@@ -1664,11 +1664,11 @@ Compliance Monitoring System
 """
 
             send_email(
-                to=email,
-                subject="Daily Litigation Intelligence Report",
-                body=body,
-                attachment=full_report
-            )
+            to_email=email,
+            subject="Daily Litigation Intelligence Report",
+            content=body,
+            attachment_path=full_report
+        )
 
             print("Report sent to:", email)
 
