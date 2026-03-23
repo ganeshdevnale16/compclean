@@ -1433,8 +1433,6 @@
     
 
     
-
-
 import pandas as pd
 import os
 import sys
@@ -1465,6 +1463,12 @@ os.makedirs(REPORT_FOLDER, exist_ok=True)
 if not os.path.exists(LOG_FILE):
     with open(LOG_FILE, "w") as f:
         json.dump([], f)
+
+# -----------------------------
+# TIMEZONE
+# -----------------------------
+
+IST = pytz.timezone('Asia/Kolkata')
 
 # --------------------------------------------------
 # LOG WRITER
@@ -1575,18 +1579,18 @@ Regards
 Compliance Monitoring System
 """
 
-                success = send_email(
-                    to_email=email,
-                    subject=subject,
-                    content=body,
-                    attachment_path=report_file
-                )
-                
-                if success:
-                    emails_sent += 1
-                    print("✅ Email sent:", email)
-                else:
-                    print("❌ Email failed:", email)
+            success = send_email(
+                to_email=email,
+                subject=subject,
+                content=body,
+                attachment_path=report_file
+            )
+
+            if success:
+                emails_sent += 1
+                print("✅ Email sent:", email)
+            else:
+                print("❌ Email failed:", email)
 
         # -----------------------------
         # CREATE FULL REPORT
@@ -1623,17 +1627,17 @@ Regards
 Compliance Monitoring System
 """
 
-                success = send_email(
-                    to_email=email,
-                    subject="Daily Litigation Intelligence Report",
-                    content=body,
-                    attachment_path=full_report
-                )
-                
-                if success:
-                    print("✅ Report sent:", email)
-                else:
-                    print("❌ Report failed:", email)
+            success = send_email(
+                to_email=email,
+                subject="Daily Litigation Intelligence Report",
+                content=body,
+                attachment_path=full_report
+            )
+
+            if success:
+                print("✅ Report sent:", email)
+            else:
+                print("❌ Report failed:", email)
 
         print("All emails processed successfully")
 
