@@ -1440,6 +1440,7 @@ import os
 import sys
 import json
 from datetime import datetime
+import pytz
 import traceback
 from services.email_service import send_email
 
@@ -1474,7 +1475,7 @@ def write_log(alert_id, alert_name, status, emails, cases, error=None):
     log = {
         "alert_id": alert_id,
         "alert_name": alert_name,
-        "run_time": datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+        "run_time": datetime.now(IST).strftime("%Y-%m-%d %H:%M:%S"),
         "status": status,
         "emails_sent": emails,
         "cases_found": cases,
