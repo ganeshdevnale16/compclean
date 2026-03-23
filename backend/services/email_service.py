@@ -192,11 +192,12 @@
 
 
 
-
 import base64
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 import os
+
+SENDGRID_API_KEY = "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"   # 🔴 hardcoded key
 
 def send_email(to_email, subject, content, attachment_path=None):
     try:
@@ -220,17 +221,13 @@ def send_email(to_email, subject, content, attachment_path=None):
                 "disposition": "attachment"
             })
 
-        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
         response = sg.send(message)
 
         print("Email sent:", response.status_code)
 
-        return True   # ✅ SUCCESS
+        return True
 
     except Exception as e:
         print("Email error:", str(e))
-
-        return False  # ❌ FAILURE
-
-
-print("API KEY:", os.getenv("SENDGRID_API_KEY"))
+        return False
