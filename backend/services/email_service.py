@@ -1,11 +1,54 @@
+# # # import smtplib
+# # # from email.message import EmailMessage
+
+# # # SMTP_SERVER = "smtp.gmail.com"
+# # # SMTP_PORT = 587
+
+# # # EMAIL_USER = "deloittecompliancesystem@gmail.com"
+# # # EMAIL_PASS = "zzfc ttss nvuw qit"
+
+
+# # # def send_email(to, subject, body, attachment=None):
+
+# # #     msg = EmailMessage()
+
+# # #     msg["Subject"] = subject
+# # #     msg["From"] = EMAIL_USER
+# # #     msg["To"] = to
+
+# # #     msg.set_content(body)
+
+# # #     if attachment:
+
+# # #         with open(attachment, "rb") as f:
+# # #             file_data = f.read()
+
+# # #         msg.add_attachment(
+# # #             file_data,
+# # #             maintype="application",
+# # #             subtype="octet-stream",
+# # #             filename=attachment.split("/")[-1]
+# # #         )
+
+# # #     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+
+# # #         server.starttls()
+
+# # #         server.login(EMAIL_USER, EMAIL_PASS)
+
+# # #         server.send_message(msg)
+
+
+
 # # import smtplib
 # # from email.message import EmailMessage
+# # import os
 
 # # SMTP_SERVER = "smtp.gmail.com"
 # # SMTP_PORT = 587
 
 # # EMAIL_USER = "deloittecompliancesystem@gmail.com"
-# # EMAIL_PASS = "zzfc ttss nvuw qit"
+# # EMAIL_PASS = "xxlr edel dkyl vmsy"
 
 
 # # def send_email(to, subject, body, attachment=None):
@@ -18,7 +61,7 @@
 
 # #     msg.set_content(body)
 
-# #     if attachment:
+# #     if attachment and os.path.exists(attachment):
 
 # #         with open(attachment, "rb") as f:
 # #             file_data = f.read()
@@ -27,99 +70,83 @@
 # #             file_data,
 # #             maintype="application",
 # #             subtype="octet-stream",
-# #             filename=attachment.split("/")[-1]
+# #             filename=os.path.basename(attachment)
 # #         )
 
 # #     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
 
 # #         server.starttls()
-
 # #         server.login(EMAIL_USER, EMAIL_PASS)
 
 # #         server.send_message(msg)
 
 
 
-# import smtplib
-# from email.message import EmailMessage
+
+
+
+
+# # import smtplib
+# # from email.message import EmailMessage
+# # import os
+
+# # SMTP_SERVER = "smtp.gmail.com"
+# # SMTP_PORT = 587
+
+# # EMAIL_USER = "deloittecompliancesystem@gmail.com"
+# # EMAIL_PASS = "xxlr edel dkyl vmsy"
+
+
+# # def send_email(to, subject, body, attachment=None):
+
+# #     msg = EmailMessage()
+
+# #     msg["Subject"] = subject
+# #     msg["From"] = EMAIL_USER
+# #     msg["To"] = to
+
+# #     msg.set_content(body)
+
+# #     if attachment and os.path.exists(attachment):
+
+# #         with open(attachment, "rb") as f:
+# #             file_data = f.read()
+
+# #         msg.add_attachment(
+# #             file_data,
+# #             maintype="application",
+# #             subtype="octet-stream",
+# #             filename=os.path.basename(attachment)
+# #         )
+
+# #     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+
+
+
+
+
+
+
+# from sendgrid import SendGridAPIClient
+# from sendgrid.helpers.mail import Mail
 # import os
 
-# SMTP_SERVER = "smtp.gmail.com"
-# SMTP_PORT = 587
-
-# EMAIL_USER = "deloittecompliancesystem@gmail.com"
-# EMAIL_PASS = "xxlr edel dkyl vmsy"
-
-
-# def send_email(to, subject, body, attachment=None):
-
-#     msg = EmailMessage()
-
-#     msg["Subject"] = subject
-#     msg["From"] = EMAIL_USER
-#     msg["To"] = to
-
-#     msg.set_content(body)
-
-#     if attachment and os.path.exists(attachment):
-
-#         with open(attachment, "rb") as f:
-#             file_data = f.read()
-
-#         msg.add_attachment(
-#             file_data,
-#             maintype="application",
-#             subtype="octet-stream",
-#             filename=os.path.basename(attachment)
+# def send_email(to_email, subject, content):
+#     try:
+#         message = Mail(
+#             from_email='deloittecompliancesystem@gmail.com',
+#             to_emails=to_email,
+#             subject=subject,
+#             html_content=content
 #         )
 
-#     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+#         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
+#         response = sg.send(message)
 
-#         server.starttls()
-#         server.login(EMAIL_USER, EMAIL_PASS)
+#         print("Email sent:", response.status_code)
 
-#         server.send_message(msg)
-
-
-
-
-
-
-
-# import smtplib
-# from email.message import EmailMessage
-# import os
-
-# SMTP_SERVER = "smtp.gmail.com"
-# SMTP_PORT = 587
-
-# EMAIL_USER = "deloittecompliancesystem@gmail.com"
-# EMAIL_PASS = "xxlr edel dkyl vmsy"
-
-
-# def send_email(to, subject, body, attachment=None):
-
-#     msg = EmailMessage()
-
-#     msg["Subject"] = subject
-#     msg["From"] = EMAIL_USER
-#     msg["To"] = to
-
-#     msg.set_content(body)
-
-#     if attachment and os.path.exists(attachment):
-
-#         with open(attachment, "rb") as f:
-#             file_data = f.read()
-
-#         msg.add_attachment(
-#             file_data,
-#             maintype="application",
-#             subtype="octet-stream",
-#             filename=os.path.basename(attachment)
-#         )
-
-#     with smtplib.SMTP(SMTP_SERVER, SMTP_PORT) as server:
+#     except Exception as e:
+#         print("Email error:", str(e))
 
 
 
@@ -127,11 +154,9 @@
 
 
 
-from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Mail
-import os
+import base64
 
-def send_email(to_email, subject, content):
+def send_email(to_email, subject, content, attachment_path=None):
     try:
         message = Mail(
             from_email='deloittecompliancesystem@gmail.com',
@@ -140,6 +165,21 @@ def send_email(to_email, subject, content):
             html_content=content
         )
 
+        if attachment_path:
+            with open(attachment_path, "rb") as f:
+                data = f.read()
+
+            encoded = base64.b64encode(data).decode()
+
+            message.add_attachment(
+                {
+                    "content": encoded,
+                    "type": "application/octet-stream",
+                    "filename": os.path.basename(attachment_path),
+                    "disposition": "attachment"
+                }
+            )
+
         sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY"))
         response = sg.send(message)
 
@@ -147,4 +187,3 @@ def send_email(to_email, subject, content):
 
     except Exception as e:
         print("Email error:", str(e))
-
