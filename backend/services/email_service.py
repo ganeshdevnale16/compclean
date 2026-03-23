@@ -198,7 +198,7 @@ from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, Attachment, FileContent, FileName, FileType, Disposition
 import os
 
-SENDGRID_API_KEY = "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"
+
 
 def send_email(to_email, subject, content, attachment_path=None):
     try:
@@ -224,7 +224,7 @@ def send_email(to_email, subject, content, attachment_path=None):
 
             message.attachment = attachment
 
-        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        sg = SendGridAPIClient(os.getenv("SENDGRID_API_KEY2"))
         response = sg.send(message)
 
         print("Email sent:", response.status_code)
