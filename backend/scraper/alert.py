@@ -1435,8 +1435,6 @@
     
 
 
-
-
 import pandas as pd
 import os
 import sys
@@ -1444,12 +1442,12 @@ import json
 from datetime import datetime
 import traceback
 from services.email_service import send_email
+
 # -----------------------------
 # PATH SETUP
 # -----------------------------
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
 sys.path.append(BASE_DIR)
 
 DATA_DIR = os.path.join(BASE_DIR, "data")
@@ -1466,10 +1464,6 @@ os.makedirs(REPORT_FOLDER, exist_ok=True)
 if not os.path.exists(LOG_FILE):
     with open(LOG_FILE, "w") as f:
         json.dump([], f)
-
-
-
-
 
 # --------------------------------------------------
 # LOG WRITER
@@ -1498,9 +1492,8 @@ def write_log(alert_id, alert_name, status, emails, cases, error=None):
     with open(LOG_FILE, "w") as f:
         json.dump(logs, f, indent=4)
 
-
 # --------------------------------------------------
-# MAIN ALERT FUNCTION (CALLED BY SCHEDULER)
+# MAIN ALERT FUNCTION
 # --------------------------------------------------
 
 def run_alert(alert):
@@ -1509,18 +1502,10 @@ def run_alert(alert):
 
     try:
 
-        # -----------------------------
-        # LOAD DATA
-        # -----------------------------
-
         df = pd.read_excel(MATCH_FILE)
         company_df = pd.read_excel(COMPANY_FILE, sheet_name=1)
 
         print("Files loaded successfully")
-
-        # -----------------------------
-        # FILTER MATCHED CASES
-        # -----------------------------
 
         df = df[df["Is Present"].astype(str).str.lower() == "yes"]
 
@@ -1534,42 +1519,15 @@ def run_alert(alert):
                 0,
                 0
             )
-
             return
-
-        
-
-
-
-        # -----------------------------
-        # DATE CLEANING
-        # -----------------------------
 
         today = pd.Timestamp.today()
 
-        df["registration_date"] = pd.to_datetime(
-            df["registration_date"],
-            dayfirst=True,
-            errors="coerce"
-        )
+        df["registration_date"] = pd.to_datetime(df["registration_date"], dayfirst=True, errors="coerce")
+        df["decision_date"] = pd.to_datetime(df["decision_date"], dayfirst=True, errors="coerce")
 
-        df["decision_date"] = pd.to_datetime(
-            df["decision_date"],
-            dayfirst=True,
-            errors="coerce"
-        )
-
-        df["case_duration_days"] = (
-            df["decision_date"] - df["registration_date"]
-        ).dt.days
-
-        df["case_age_days"] = (
-            today - df["registration_date"]
-        ).dt.days
-
-        # -----------------------------
-        # FLAGS
-        # -----------------------------
+        df["case_duration_days"] = (df["decision_date"] - df["registration_date"]).dt.days
+        df["case_age_days"] = (today - df["registration_date"]).dt.days
 
         df["Is Active"] = df["case_status"].str.lower().eq("pending").astype(int)
         df["Is Closed"] = 1 - df["Is Active"]
@@ -1580,7 +1538,6 @@ def run_alert(alert):
         # -----------------------------
 
         emails_sent = 0
-
         grouped = df.groupby("Mail Id")
 
         for email, group in grouped:
@@ -1618,17 +1575,17 @@ Compliance Monitoring System
 """
 
             try:
-            send_email(
-                to_email=email,
-                subject=subject,
-                content=body,
-                attachment_path=report_file
-            )
-            emails_sent += 1
-            print("✅ Email sent:", email)
-        
-        except Exception as e:
-            print("❌ Email failed:", email, str(e))
+                send_email(
+                    to_email=email,
+                    subject=subject,
+                    content=body,
+                    attachment_path=report_file
+                )
+                emails_sent += 1
+                print("✅ Email sent:", email)
+
+            except Exception as e:
+                print("❌ Email failed:", email, str(e))
 
         # -----------------------------
         # CREATE FULL REPORT
@@ -1640,7 +1597,6 @@ Compliance Monitoring System
         )
 
         with pd.ExcelWriter(full_report) as writer:
-
             df.to_excel(writer, sheet_name="Case_Details", index=False)
 
         print("Advanced litigation intelligence report created")
@@ -1667,20 +1623,18 @@ Compliance Monitoring System
 """
 
             try:
-            send_email(
-                to_email=email,
-                subject="Daily Litigation Intelligence Report",
-                content=body,
-                attachment_path=full_report
-            )
-            print("✅ Report sent:", email)
-        
-        except Exception as e:
-            print("❌ Report failed:", email, str(e))
+                send_email(
+                    to_email=email,
+                    subject="Daily Litigation Intelligence Report",
+                    content=body,
+                    attachment_path=full_report
+                )
+                print("✅ Report sent:", email)
+
+            except Exception as e:
+                print("❌ Report failed:", email, str(e))
 
         print("All emails processed successfully")
-
-
 
         # -----------------------------
         # WRITE SUCCESS LOG
@@ -1693,7 +1647,7 @@ Compliance Monitoring System
             emails_sent,
             len(df)
         )
-               
+
     except Exception as e:
         print("🔥 FULL ERROR TRACE 🔥")
         traceback.print_exc()
@@ -1706,29 +1660,3 @@ Compliance Monitoring System
             0,
             str(e)
         )
-
-    # except Exception as e:
-
-    #     print("Alert failed:", e)
-
-    #     write_log(
-    #         alert["id"],
-    #         alert["name"],
-    #         "failed",
-    #         0,
-    #         0,
-    #         str(e)
-    #     )
-
-
-    
-
-    
-
-            
-        
-
-        
-
-
-
