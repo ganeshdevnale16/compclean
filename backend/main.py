@@ -1306,3 +1306,7 @@ def test_email():
 
 
 
+from routes.data_center import router as data_router
+app.include_router(data_router)
+
+
