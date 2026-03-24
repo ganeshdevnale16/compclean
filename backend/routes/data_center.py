@@ -1,7 +1,7 @@
 from fastapi import APIRouter
 import json
 import os
-
+from datetime import datetime
 router = APIRouter()
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -28,8 +28,8 @@ def toggle_source(source_id: int):
 
 
 
-from scraper.scrapper import run_scraper  
 
+from scraper.scrapper import run_scraper
 @router.post("/data-sources/{source_id}/run")
 def run_source(source_id: int):
 
@@ -45,6 +45,30 @@ def run_source(source_id: int):
     with open(DATA_FILE, "w") as f:
         json.dump(sources, f, indent=4)
 
+
+
+
+@router.post("/data-sources/{source_id}/run")
+def run_source(source_id: int):
+
+    try:
+        run_scraper()
+
+        with open(DATA_FILE) as f:
+            sources = json.load(f)
+
+        for src in sources:
+            if src["id"] == source_id:
+                src["last_run"] = str(datetime.now())
+
+        with open(DATA_FILE, "w") as f:
+            json.dump(sources, f, indent=4)
+
+        return {"message": "scraper started"}
+
+    except Exception as e:
+        print("SCRAPER ERROR:", str(e))
+        return {"error": str(e)}
     return {"message": "scraper started"}
 
     return {"message": "updated"}
