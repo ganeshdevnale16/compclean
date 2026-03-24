@@ -28,7 +28,7 @@ def toggle_source(source_id: int):
 
 
 
-from scraper.scraper import run_scraper   # your scraper function
+from scraper.scrapper.py import run_scraper  
 
 @router.post("/data-sources/{source_id}/run")
 def run_source(source_id: int):
