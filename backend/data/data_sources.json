@@ -1,0 +1,9 @@
+[
+  {
+    "id": 1,
+    "name": "eCourts Scraper",
+    "source_url": "https://judgments.ecourts.gov.in/",
+    "status": "active",
+    "last_run": null
+  }
+]
