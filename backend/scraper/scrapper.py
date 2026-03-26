@@ -55,6 +55,33 @@ def run_scraper():
 
     log("Starting scraper...")
 
+    # chrome_options = Options()
+
+    # chrome_options.add_argument("--headless=new")
+    # chrome_options.add_argument("--window-size=1920,1080")
+    # chrome_options.add_argument("--disable-gpu")
+    # chrome_options.add_argument("--no-sandbox")
+    # chrome_options.add_argument("--disable-dev-shm-usage")
+    # chrome_options.add_argument("--disable-extensions")
+    # chrome_options.add_argument("--disable-infobars")
+    # chrome_options.add_argument("--disable-notifications")
+    # chrome_options.add_argument("--disable-popup-blocking")
+    # chrome_options.add_argument("--remote-debugging-port=9222")
+
+    # # ✅ IMPORTANT FOR RENDER
+
+
+    # # if os.name != "nt":  # Linux (Render)
+    # #     chrome_options.binary_location = "/usr/bin/chromium"
+
+    # driver = webdriver.Chrome(
+    #     service=Service(ChromeDriverManager().install()),
+    #     options=chrome_options
+    # )
+
+
+
+
     chrome_options = Options()
 
     chrome_options.add_argument("--headless=new")
@@ -66,18 +93,23 @@ def run_scraper():
     chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--disable-popup-blocking")
-    chrome_options.add_argument("--remote-debugging-port=9222")
-
-    # ✅ IMPORTANT FOR RENDER
-
-
-    # if os.name != "nt":  # Linux (Render)
-    #     chrome_options.binary_location = "/usr/bin/chromium"
-
+    
+    # ✅ IMPORTANT: Set Chrome path for Render
+    if os.name != "nt":  # Linux (Render)
+        chrome_options.binary_location = "/opt/chrome/chrome"
+    
     driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()),
         options=chrome_options
     )
+
+
+
+
+
+
+
+    
 
     wait = WebDriverWait(driver, 20)
 
