@@ -82,7 +82,7 @@ def run_scraper():
 
 
 
-   chrome_options = Options()
+    chrome_options = Options()
 
     chrome_options.add_argument("--headless=new")
     chrome_options.add_argument("--window-size=1920,1080")
@@ -93,17 +93,14 @@ def run_scraper():
     chrome_options.add_argument("--disable-infobars")
     chrome_options.add_argument("--disable-notifications")
     chrome_options.add_argument("--disable-popup-blocking")
-    
-    # ✅ Correct path for Render (Linux)
+
     if os.name != "nt":
         chrome_options.binary_location = "/usr/bin/chromium"
-    
-    # ✅ Use system-installed chromedriver (NOT webdriver_manager)
+
     driver = webdriver.Chrome(
         service=Service("/usr/bin/chromedriver"),
         options=chrome_options
     )
-
 
 
     
