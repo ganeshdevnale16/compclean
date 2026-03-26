@@ -85,6 +85,9 @@ from datetime import datetime
 import threading
 
 from scraper.scrapper import run_scraper, GLOBAL_LOGS
+from datetime import datetime
+import pytz
+
 
 router = APIRouter()
 
@@ -132,7 +135,10 @@ def run_source(source_id: int):
 
     for src in sources:
         if src["id"] == source_id:
-            src["last_run"] = str(datetime.now())
+            ist = pytz.timezone("Asia/Kolkata")
+            now_ist = datetime.now(ist)
+            
+            src["last_run"] = now_ist.strftime("%d %b %Y, %I:%M %p")
 
     with open(DATA_FILE, "w") as f:
         json.dump(sources, f, indent=4)
