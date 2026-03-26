@@ -214,7 +214,7 @@ def run_scraper():
 
         while True:
 
-            print("Page:", page)
+            log(f"Page: {page}")
 
             rows = wait.until(
                 EC.presence_of_all_elements_located((By.CSS_SELECTOR,"tbody tr"))
