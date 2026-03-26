@@ -47,28 +47,27 @@ def run_source(source_id: int):
 
 
 
+from scraper.scrapper import run_scraper
+import threading
+import json
+from datetime import datetime
 
 @router.post("/data-sources/{source_id}/run")
 def run_source(source_id: int):
 
-    try:
-        run_scraper()
+    # ✅ Run scraper in background
+    threading.Thread(target=run_scraper).start()
 
-        with open(DATA_FILE) as f:
-            sources = json.load(f)
+    # ✅ Update last run immediately
+    with open(DATA_FILE) as f:
+        sources = json.load(f)
 
-        for src in sources:
-            if src["id"] == source_id:
-                src["last_run"] = str(datetime.now())
+    for src in sources:
+        if src["id"] == source_id:
+            src["last_run"] = str(datetime.now())
 
-        with open(DATA_FILE, "w") as f:
-            json.dump(sources, f, indent=4)
+    with open(DATA_FILE, "w") as f:
+        json.dump(sources, f, indent=4)
 
-        return {"message": "scraper started"}
-
-    except Exception as e:
-        print("SCRAPER ERROR:", str(e))
-        return {"error": str(e)}
-    return {"message": "scraper started"}
-
-    return {"message": "updated"}
+    # ✅ Return immediately (NO timeout)
+    return {"status": "started", "source_id": source_id}
