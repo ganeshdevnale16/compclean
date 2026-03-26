@@ -71,8 +71,8 @@ def run_scraper():
     # ✅ IMPORTANT FOR RENDER
 
 
-    if os.name != "nt":  # Linux (Render)
-        chrome_options.binary_location = "/usr/bin/chromium"
+    # if os.name != "nt":  # Linux (Render)
+    #     chrome_options.binary_location = "/usr/bin/chromium"
 
     driver = webdriver.Chrome(
         service=Service(ChromeDriverManager().install()),
