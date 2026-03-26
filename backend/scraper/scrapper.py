@@ -40,7 +40,6 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-from webdriver_manager.chrome import ChromeDriverManager
 
 
 def run_scraper():
@@ -85,16 +84,19 @@ def run_scraper():
     chrome_options = Options()
     
     chrome_options.add_argument("--headless=new")
-    chrome_options.add_argument("--window-size=1920,1080")
-    chrome_options.add_argument("--disable-gpu")
     chrome_options.add_argument("--no-sandbox")
     chrome_options.add_argument("--disable-dev-shm-usage")
-    chrome_options.add_argument("--disable-extensions")
-    chrome_options.add_argument("--disable-infobars")
-    chrome_options.add_argument("--disable-notifications")
-    chrome_options.add_argument("--disable-popup-blocking")
     
-    # ✅ Let Selenium manage everything
+    # 🔥 REQUIRED FOR RENDER (fix crash)
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    chrome_options.add_argument("--disable-software-rasterizer")
+    chrome_options.add_argument("--single-process")
+    chrome_options.add_argument("--disable-dev-tools")
+    
+    # Optional
+    chrome_options.add_argument("--window-size=1920,1080")
+    chrome_options.add_argument("--disable-gpu")
+    
     driver = webdriver.Chrome(options=chrome_options)
 
     
@@ -197,7 +199,7 @@ def run_scraper():
         time.sleep(3)
         wait_for_loader()
 
-        print("Extracting data...")
+        log("Extracting data...")
 
         length_dropdown = wait.until(
             EC.presence_of_element_located((By.NAME,"example_pdf_length"))
