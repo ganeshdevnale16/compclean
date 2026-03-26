@@ -2,7 +2,7 @@
 
 echo "Installing Chromium..."
 
-apt-get update
-apt-get install -y chromium chromium-driver
+apt-get update || true
+apt-get install -y chromium chromium-driver || true
 
-echo "Chromium installed successfully"
+echo "Done"
