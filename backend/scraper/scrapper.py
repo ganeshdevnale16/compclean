@@ -40,17 +40,18 @@ from selenium.webdriver.support.ui import WebDriverWait, Select
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
-
+GLOBAL_LOGS = []
 
 def run_scraper():
 
     client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
 
     logs = []
-
+    
     def log(msg):
-        print(msg)
+        print(msg, flush=True)   # 🔥 instant terminal print
         logs.append(msg)
+        GLOBAL_LOGS.append(msg)  # 🔥 store for frontend
 
     log("Starting scraper...")
 
