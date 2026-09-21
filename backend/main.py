@@ -840,6 +840,7 @@ app.add_middleware(
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE_DIR, "data")
 DATA_FILE = os.path.join(BASE_DIR, "data", "entity_match_results.xlsx")
+OFAC_FILE = os.path.join(BASE_DIR, "data", "ofac_sanctions.csv")
 
 
 # -----------------------------
@@ -909,52 +910,402 @@ def run_pipeline():
     return {"status": "pipeline completed"}
 
 
+# @app.get("/dashboard")
+# def dashboard_data():
+
+#     if not os.path.exists(DATA_FILE):
+#         return {
+#             "kpi": {},
+#             "case_status": {},
+#             "state": {},
+#             "court": {},
+#             "timeline": {},
+#             "cases": []
+#         }
+
+#     df = pd.read_excel(DATA_FILE)
+
+#     df = df.replace([np.inf, -np.inf], "")
+#     df = df.fillna("")
+
+#     df = df[df["Is Present"].astype(str).str.lower() == "yes"]
+
+#     df["registration_date"] = pd.to_datetime(
+#         df["registration_date"],
+#         errors="coerce",
+#         dayfirst=True
+#     )
+
+#     df["month"] = df["registration_date"].dt.to_period("M").astype(str)
+
+#     kpi = {
+#         "total_cases": int(len(df)),
+#         "entities": int(df["Entity Name"].nunique()),
+#         "active_cases": int((df["case_status"].str.lower()=="pending").sum()),
+#         "high_risk": int((df["litigation_risk_score"]>=7).sum())
+#     }
+
+#     return {
+#         "kpi": kpi,
+#         "case_status": df["case_status"].value_counts().to_dict(),
+#         "state": df["state"].value_counts().to_dict(),
+#         "court": df["court"].value_counts().to_dict(),
+#         "timeline": df.groupby("month").size().to_dict(),
+#         "cases": df.to_dict(orient="records")
+#     }
+
+
 @app.get("/dashboard")
 def dashboard_data():
 
-    if not os.path.exists(DATA_FILE):
-        return {
-            "kpi": {},
-            "case_status": {},
-            "state": {},
-            "court": {},
-            "timeline": {},
-            "cases": []
-        }
+    # =====================================================
+    # LOAD eCOURTS DATA
+    # =====================================================
 
-    df = pd.read_excel(DATA_FILE)
+    if os.path.exists(DATA_FILE):
 
-    df = df.replace([np.inf, -np.inf], "")
-    df = df.fillna("")
+        df = pd.read_excel(DATA_FILE)
 
-    df = df[df["Is Present"].astype(str).str.lower() == "yes"]
+        # Fix NaN / infinity JSON issues
+        df = df.replace([np.inf, -np.inf], "")
+        df = df.fillna("")
 
-    df["registration_date"] = pd.to_datetime(
-        df["registration_date"],
-        errors="coerce",
-        dayfirst=True
-    )
+        # Keep only records present in eCourts
+        if "Is Present" in df.columns:
+            df = df[
+                df["Is Present"]
+                .astype(str)
+                .str.lower()
+                == "yes"
+            ]
 
-    df["month"] = df["registration_date"].dt.to_period("M").astype(str)
+        # Convert registration date
+        if "registration_date" in df.columns:
 
-    kpi = {
-        "total_cases": int(len(df)),
-        "entities": int(df["Entity Name"].nunique()),
-        "active_cases": int((df["case_status"].str.lower()=="pending").sum()),
-        "high_risk": int((df["litigation_risk_score"]>=7).sum())
-    }
+            df["registration_date"] = pd.to_datetime(
+                df["registration_date"],
+                errors="coerce",
+                dayfirst=True
+            )
+
+            df["month"] = (
+                df["registration_date"]
+                .dt.to_period("M")
+                .astype(str)
+            )
+
+    else:
+
+        df = pd.DataFrame()
+
+
+    # =====================================================
+    # LOAD OFAC DATA
+    # =====================================================
+
+    if os.path.exists(OFAC_FILE):
+
+        sanctions_df = pd.read_csv(
+            OFAC_FILE,
+            encoding="utf-8"
+        )
+
+        # Fix NaN / infinity JSON issues
+        sanctions_df = sanctions_df.replace(
+            [np.inf, -np.inf],
+            ""
+        )
+
+        sanctions_df = sanctions_df.fillna("")
+
+    else:
+
+        sanctions_df = pd.DataFrame()
+
+
+    # =====================================================
+    # eCOURTS KPI
+    # =====================================================
+
+    if not df.empty:
+
+        total_cases = len(df)
+
+        entities = (
+            df["Entity Name"].nunique()
+            if "Entity Name" in df.columns
+            else 0
+        )
+
+        active_cases = (
+            int(
+                (
+                    df["case_status"]
+                    .astype(str)
+                    .str.lower()
+                    == "pending"
+                ).sum()
+            )
+            if "case_status" in df.columns
+            else 0
+        )
+
+        if "litigation_risk_score" in df.columns:
+
+            risk_score = pd.to_numeric(
+                df["litigation_risk_score"],
+                errors="coerce"
+            )
+
+            high_risk = int(
+                (risk_score >= 7).sum()
+            )
+
+        else:
+
+            high_risk = 0
+
+    else:
+
+        total_cases = 0
+        entities = 0
+        active_cases = 0
+        high_risk = 0
+
+
+    # =====================================================
+    # eCOURTS CHART DATA
+    # =====================================================
+
+    if not df.empty:
+
+        case_status = (
+            df["case_status"].value_counts().to_dict()
+            if "case_status" in df.columns
+            else {}
+        )
+
+        state = (
+            df["state"].value_counts().to_dict()
+            if "state" in df.columns
+            else {}
+        )
+
+        court = (
+            df["court"].value_counts().to_dict()
+            if "court" in df.columns
+            else {}
+        )
+
+        timeline = (
+            df.groupby("month").size().to_dict()
+            if "month" in df.columns
+            else {}
+        )
+
+    else:
+
+        case_status = {}
+        state = {}
+        court = {}
+        timeline = {}
+
+
+    # =====================================================
+    # OFAC KPI
+    # =====================================================
+
+    total_sanctions = len(sanctions_df)
+
+    # Count vessels
+    if not sanctions_df.empty and "Type" in sanctions_df.columns:
+
+        vessels = int(
+            (
+                sanctions_df["Type"]
+                .astype(str)
+                .str.lower()
+                == "vessel"
+            ).sum()
+        )
+
+    else:
+
+        vessels = 0
+
+
+    # Count unique programs
+    if not sanctions_df.empty and "Program" in sanctions_df.columns:
+
+        programs = int(
+            sanctions_df["Program"]
+            .replace("", np.nan)
+            .replace("-0-", np.nan)
+            .dropna()
+            .nunique()
+        )
+
+    else:
+
+        programs = 0
+
+
+    # Count unique regions
+    if not sanctions_df.empty and "Region" in sanctions_df.columns:
+
+        regions = int(
+            sanctions_df["Region"]
+            .replace("", np.nan)
+            .replace("-0-", np.nan)
+            .dropna()
+            .nunique()
+        )
+
+    else:
+
+        regions = 0
+
+
+    # =====================================================
+    # OFAC CHART DATA
+    # =====================================================
+
+    if not sanctions_df.empty:
+
+        # -----------------------------
+        # By Type
+        # -----------------------------
+
+        if "Type" in sanctions_df.columns:
+
+            sanction_type = (
+                sanctions_df["Type"]
+                .value_counts()
+                .to_dict()
+            )
+
+        else:
+
+            sanction_type = {}
+
+
+        # -----------------------------
+        # By Region
+        # -----------------------------
+
+        if "Region" in sanctions_df.columns:
+
+            region_df = sanctions_df[
+                ~sanctions_df["Region"]
+                .astype(str)
+                .isin(["", "-0-"])
+            ]
+
+            sanction_region = (
+                region_df["Region"]
+                .value_counts()
+                .to_dict()
+            )
+
+        else:
+
+            sanction_region = {}
+
+
+        # -----------------------------
+        # By Program
+        # -----------------------------
+
+        if "Program" in sanctions_df.columns:
+
+            sanction_program = (
+                sanctions_df["Program"]
+                .value_counts()
+                .to_dict()
+            )
+
+        else:
+
+            sanction_program = {}
+
+
+        # -----------------------------
+        # By Vessel Type
+        # -----------------------------
+
+        if "Vessel Type" in sanctions_df.columns:
+
+            vessel_df = sanctions_df[
+                ~sanctions_df["Vessel Type"]
+                .astype(str)
+                .isin(["", "-0-"])
+            ]
+
+            vessel_type = (
+                vessel_df["Vessel Type"]
+                .value_counts()
+                .to_dict()
+            )
+
+        else:
+
+            vessel_type = {}
+
+    else:
+
+        sanction_type = {}
+        sanction_region = {}
+        sanction_program = {}
+        vessel_type = {}
+
+
+    # =====================================================
+    # FINAL RESPONSE
+    # =====================================================
 
     return {
-        "kpi": kpi,
-        "case_status": df["case_status"].value_counts().to_dict(),
-        "state": df["state"].value_counts().to_dict(),
-        "court": df["court"].value_counts().to_dict(),
-        "timeline": df.groupby("month").size().to_dict(),
-        "cases": df.to_dict(orient="records")
+
+        # -----------------------------
+        # eCOURTS
+        # -----------------------------
+
+        "kpi": {
+            "total_cases": total_cases,
+            "entities": int(entities),
+            "active_cases": int(active_cases),
+            "high_risk": int(high_risk)
+        },
+
+        "case_status": case_status,
+        "state": state,
+        "court": court,
+        "timeline": timeline,
+
+        "cases": df.to_dict(
+            orient="records"
+        ),
+
+
+        # -----------------------------
+        # OFAC
+        # -----------------------------
+
+        "sanctions_kpi": {
+            "total_records": int(total_sanctions),
+            "vessels": int(vessels),
+            "programs": int(programs),
+            "regions": int(regions)
+        },
+
+        "sanction_type": sanction_type,
+        "sanction_region": sanction_region,
+        "sanction_program": sanction_program,
+        "vessel_type": vessel_type,
+
+        "sanctions": sanctions_df.to_dict(
+            orient="records"
+        )
     }
-
-
-
 
 
 
