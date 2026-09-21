@@ -1,8 +1,15 @@
 [
   {
     "id": 1,
-    "name": "eCourts Scraper",
+    "name": "eCourts judgments",
     "source_url": "https:judgments.ecourts.gov.in",
+    "status": "active",
+    "last_run": null
+  },
+  {
+    "id": 2,
+    "name": "U.S.Sanction(OFAC/Treasury)",
+    "source_url": "https://ofac.treasury.gov/",
     "status": "active",
     "last_run": null
   }
